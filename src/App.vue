@@ -1,13 +1,21 @@
 <script>
+import AppHeader from './components/AppHeader.vue';
+import AppFooter from './components/AppFooter.vue';
+import AppMain from './components/AppMain.vue'
 export default {
-  name:'Boolfolio',
+  name: 'Boolfolio',
+  components: {
+    AppHeader,
+    AppFooter,
+    AppMain,
+  }
 }
 </script>
 
 <template>
-<div>Ciao</div>
+  <AppHeader />
+  <AppMain/>
+  <AppFooter />
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>
