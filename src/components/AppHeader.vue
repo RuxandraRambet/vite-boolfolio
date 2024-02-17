@@ -12,9 +12,9 @@ export default {
             </div>
             <nav>
                 <ul class="list-unstyled d-flex gap-2">
-                    <li>Menu</li>
-                    <li>Menu</li>
-                    <li>Menu</li>
+                    <li><router-link :to="{name: 'home'}">Home</router-link></li>
+                    <li><router-link :to="{name: 'projects'}">Projects</router-link></li>
+                    <li><router-link :to="{name: 'about'}">About</router-link></li>
                 </ul>
             </nav>
         </div>
