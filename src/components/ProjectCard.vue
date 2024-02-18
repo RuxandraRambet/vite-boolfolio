@@ -5,7 +5,7 @@ export default {
         project: Object,
     },
     computed: {
-        projectDescription(){
+        projectDescription() {
             return this.project.description?.substring(0, 100) + "...";
         },
     },
@@ -19,7 +19,9 @@ export default {
         <div class="card-body">
             <h5 class="card-title">{{ project.title }}</h5>
             <p class="card-text">{{ projectDescription }}</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
+            <router-link :to="{ name: 'single-project', params: { slug: project.slug} }" class="btn btn-primary">
+                View Details
+            </router-link>
         </div>
     </div>
 </template>

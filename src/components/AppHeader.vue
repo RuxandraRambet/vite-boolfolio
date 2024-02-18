@@ -11,7 +11,7 @@ export default {
                 <img src="" alt="">IMG
             </div>
             <nav>
-                <ul class="list-unstyled d-flex gap-2">
+                <ul class="list-unstyled d-flex gap-4">
                     <li><router-link :to="{name: 'home'}" class="link-light link-underline-opacity-0">Home</router-link></li>
                     <li><router-link :to="{name: 'projects'}" class="link-light link-underline-opacity-0">Projects</router-link></li>
                     <li><router-link :to="{name: 'about'}" class="link-light link-underline-opacity-0">About</router-link></li>
