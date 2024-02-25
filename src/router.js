@@ -31,10 +31,10 @@ const router = createRouter({
         },
         { 
             path: '/:pathMatch(.*)*', 
-            name: 'NotFound', 
+            name: 'not-found', 
             component: NotFound,
         },
     ],
 });
 
-export default router;
+export { router };

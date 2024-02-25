@@ -1,48 +1,72 @@
 <script>
 import axios from 'axios';
 import ProjectCard from '../components/ProjectCard.vue';
+import AppLoading from '../components/AppLoading.vue';
+import ProjectSearch from '../components/ProjectSearch.vue';
+import store from '../store';
 export default {
     name: 'ProjectList',
     components: {
-        ProjectCard
+        ProjectCard,
+        AppLoading,
+        ProjectSearch,
     },
     data() {
         return {
+            store,
             loading: false,
-            currentPage: 1,
+            responseData: {},
+            errors: null,
             projects: [],
-            'baseUrl': 'http://127.0.0.1:8000',
-            'apiUrl': {
-                'projects': '/api/projects',
-            },
         };
     },
     methods: {
         getProjects() {
+            this.errors = null;
             this.loading = true;
 
-            axios.get(this.baseUrl + this.apiUrl.projects, {
+            axios.get(this.store.api.baseUrl + this.store.api.apiUrl.projects, {
                 params: {
-                    page: this.currentPage,
+                    page: this.store.projects.currentPage,
+                    key: this.store.projects.searchKey,
                 },
             }).then((response) => {
-                this.projects = response.data.results.data;
+                this.responseData = response.data;
             }).catch(error => {
                 console.log(error);
+                this.responseData.result.data = [];
+                this.errors = error.response.data.message;
             }).finally(() => {
                 this.loading = false;
             });
         },
         nextPage() {
-            this.currentPage++;
+            this.store.projects.currentPage++;
+            this.$router.push({
+                name: 'projects',
+                query: {
+                    page: this.store.projects.currentPage,
+                    key: this.store.projects.searchKey,
+                },
+
+            });
             this.getProjects();
         },
         prevPage() {
-            this.currentPage--;
+            this.store.projects.currentPage--;
+            this.$router.push({
+                name: 'projects',
+                query: {
+                    page: this.store.projects.currentPage,
+                    key: this.store.projects.searchKey,
+                },
+            });
             this.getProjects();
         },
     },
     created() {
+        this.store.projects.currentPage = this.$route.query.page ?? 1;
+        this.store.projects.searchKey = this.$route.query.key ?? null;
         this.getProjects();
     },
 }
@@ -51,25 +75,24 @@ export default {
     <main>
         <div class="container py-5">
             <h1>My Projects</h1>
-            <div v-if="loading">
-                <div class="spinner-border mx-2" style="width: 3rem; height: 3rem; color:rgb(243, 120, 6)" role="status">
-                    <span class="visually-hidden">Loading...</span>
-                </div>
-                <div class="spinner-grow" style="width: 3rem; height: 3rem; color:rgb(3, 3, 58)" role="status">
-                    <span class="visually-hidden">Loading...</span>
-                </div>
-            </div>
+
+            <ProjectSearch @search-project="getProjects" />
+
+            <div v-if="errors">{{ errors }}</div>
+
+            <AppLoading v-if="loading" />
+            
             <div class="row mt-5" v-else>
-                <div class="col col-md-4 g-3" v-for="project in projects">
+                <div class="col col-md-4 g-3" v-for="project in responseData.result?.data">
                     <ProjectCard :project="project" />
                 </div>
                 <nav class="my-5">
                     <ul class="list-unstyled d-flex justify-content-between">
                         <li>
-                            <button class="btn btn-primary" @click="prevPage">Previous</button>
+                            <button class="btn btn-primary" @click="prevPage" v-show="responseData.result?.prev_page_url">Previous</button>
                         </li>
                         <li>
-                            <button class="btn btn-primary" @click="nextPage">Next</button>
+                            <button class="btn btn-primary" @click="nextPage" v-show="responseData.result?.next_page_url">Next</button>
                         </li>
                     </ul>
                 </nav>
